@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAD 101: Interactive Financial Analysis Lesson</title>
+    <!-- Tailwind CSS for modern responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        },
+                        slate: {
+                            950: '#0f172a'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- MathJax for rendering gorgeous math formulas dynamically -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            startup: {
+                pageReady: () => {
+                    return MathJax.startup.defaultPageReady().then(() => {
+                        console.log("MathJax loaded successfully!");
+                    });
+                }
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es6/tex-chtml-full.js" id="MathJax-script" async></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header Navigation -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 text-white p-2.5 rounded-lg flex items-center justify-center shadow-lg shadow-brand-600/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 002 2h2a2 2 0 002-2"></path></svg>
+                </div>
+                <div>
+                    <h1 class="font-bold text-lg leading-tight tracking-wide">SAD 101: Systems Analysis</h1>
+                    <p class="text-xs text-brand-100 font-medium">Financial Analysis Lab • Prof. Douglas</p>
+                </div>
+            </div>
+            
+            <!-- Progress Tracker -->
+            <div class="flex items-center space-x-2 bg-slate-800 px-4 py-2 rounded-full border border-slate-700 w-full sm:w-auto justify-center">
+                <span class="text-xs text-slate-300 font-semibold uppercase tracking-wider">Your Progress:</span>
+                <div class="w-32 bg-slate-700 h-2.5 rounded-full overflow-hidden">
+                    <div id="progressBar" class="bg-brand-600 h-full w-5 transition-all duration-500 ease-out"></div>
+                </div>
+                <span id="progressText" class="text-xs font-bold text-brand-100">10%</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Workspace -->
+    <main class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 flex-grow grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Interactive Content (9 Columns on lg) -->
+        <div class="lg:col-span-8 flex flex-col space-y-6">
+            
+            <!-- Tab Navigation Menu -->
+            <nav class="flex space-x-1 bg-slate-200/60 p-1 rounded-xl overflow-x-auto whitespace-nowrap scrollbar-hide">
+                <button onclick="switchTab('welcome')" id="tab-welcome" class="tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-700 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2 bg-white text-brand-700 shadow-sm">
+                    👋 Welcome
+                </button>
+                <button onclick="switchTab('roi')" id="tab-roi" class="tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2">
+                    💵 Return (ROI)
+                </button>
+                <button onclick="switchTab('pv')" id="tab-pv" class="tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2">
+                    ⏳ Present Value (PV)
+                </button>
+                <button onclick="switchTab('npv')" id="tab-npv" class="tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2">
+                    📊 Project Sim (NPV)
+                </button>
+                <button onclick="switchTab('quiz')" id="tab-quiz" class="tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2">
+                    🎓 Quiz & Grad
+                </button>
+            </nav>
+
+            <!-- CARD FRAME FOR SLIDES -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 md:p-8 flex-grow flex flex-col justify-between min-h-[480px]">
+                
+                <!-- Slide 1: Welcome -->
+                <div id="slide-welcome" class="slide-content space-y-6">
+                    <div class="flex flex-col md:flex-row items-center gap-6 pb-6 border-b border-slate-100">
+                        <div class="w-16 h-16 rounded-2xl bg-brand-100 flex items-center justify-center text-brand-700 text-3xl font-bold flex-shrink-0">
+                            👨‍🏫
+                        </div>
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900">Why does a Systems Analyst care about Cash?</h2>
+                            <p class="text-slate-500 mt-1">SAD 101 Lecture with Professor Douglas</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-4 text-slate-600 leading-relaxed">
+                        <p class="text-lg">
+                            "Hello, class! Welcome to college-level <strong class="text-slate-900">Systems Analysis and Design</strong>. Often, beginners think our job is just drawing code diagrams and building databases. But here is the real-world truth:"
+                        </p>
+                        
+                        <div class="bg-brand-50 border-l-4 border-brand-600 p-4 rounded-r-xl my-4">
+                            <p class="italic text-brand-800 font-medium">
+                                "In the corporate world, every technology upgrade is an investment. If you propose building a $100,000 custom software solution, your boss's first question will not be 'What code language does it run?' It will be 'How much money does this save or make us?'"
+                            </p>
+                        </div>
+
+                        <p>
+                            We call this <strong class="text-slate-900">Cost-Benefit Analysis</strong>. In this quick interactive lab, we are going to learn how to prove our projects are financially smart using two essential tools:
+                        </p>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4">
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-brand-600 transition-colors">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="text-emerald-500 text-xl">1.</span> Return on Investment (ROI)
+                                </h3>
+                                <p class="text-sm text-slate-500 mt-1">Measures the raw efficiency of your investment. It answers: "How much profit did we make relative to our costs?"</p>
+                            </div>
+                            <div class="p-4 rounded-xl border border-slate-200 bg-white hover:border-brand-600 transition-colors">
+                                <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                    <span class="text-emerald-500 text-xl">2.</span> Net Present Value (NPV)
+                                </h3>
+                                <p class="text-sm text-slate-500 mt-1">Considers the Time Value of Money. It answers: "Is our multi-year project worth the wait when future cash is worth less?"</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2: ROI Lesson & Interactive Widget -->
+                <div id="slide-roi" class="slide-content space-y-6 hidden">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-950 flex items-center gap-2">
+                            <span>💵</span> Lesson 1: Return on Investment (ROI)
+                        </h2>
+                        <p class="text-slate-500 mt-1">Let's calculate simple financial yields.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div class="space-y-4 text-slate-600 text-sm md:text-base leading-relaxed">
+                            <p>
+                                ROI is the absolute easiest way to evaluate a project. Let's look at the standard academic formula:
+                            </p>
+                            
+                            <!-- Dynamic math block (LaTeX formatted) -->
+                            <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-center shadow-inner my-2">
+                                $$ROI = \frac{\text{Total Benefits} - \text{Total Costs}}{\text{Total Costs}} \times 100\%$$
+                            </div>
+
+                            <p class="bg-slate-100 p-3 rounded-lg border-l-4 border-slate-500 text-xs text-slate-600">
+                                💡 <strong>A systems example:</strong> You buy a new cloud inventory database software for $10,000. It reduces processing time and saves you $15,000 in labor costs. Your ROI is 50%.
+                            </p>
+                            
+                            <p class="font-semibold text-slate-800">
+                                Try sliding the controls on the right to see how changing total costs and future savings automatically recalculates your ROI!
+                            </p>
+                        </div>
+
+                        <!-- ROI Calculator Card -->
+                        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-5">
+                            <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center justify-between">
+                                <span>Interactive ROI Tool</span>
+                                <span class="bg-emerald-100 text-emerald-800 text-xs px-2 py-1 rounded">Live Sandbox</span>
+                            </h3>
+
+                            <!-- Sliders -->
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                                        <span>SYSTEM INVESTMENT COST:</span>
+                                        <span class="text-brand-700 font-bold" id="roiCostLabel">$10,000</span>
+                                    </div>
+                                    <input type="range" id="roiCost" min="1000" max="50000" step="500" value="10000" oninput="updateROI()" class="w-full accent-emerald-600 cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                                        <span>SYSTEM BENEFITS (SAVINGS):</span>
+                                        <span class="text-brand-700 font-bold" id="roiBenefitLabel">$15,000</span>
+                                    </div>
+                                    <input type="range" id="roiBenefit" min="1000" max="75000" step="500" value="15000" oninput="updateROI()" class="w-full accent-emerald-600 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- Live ROI Math Display -->
+                            <div class="bg-white border border-slate-200 p-4 rounded-xl text-center space-y-2">
+                                <span class="text-xs uppercase text-slate-400 font-bold tracking-widest block">Formula Simulation</span>
+                                <div id="roiFormulaOutput" class="text-slate-800 text-base font-serif py-1">
+                                    $$ROI = \frac{15,000 - 10,000}{10,000} \times 100\% = 50\%$$
+                                </div>
+                                <div class="pt-2 border-t border-slate-100">
+                                    <span class="text-xs text-slate-500 block">Interpretation:</span>
+                                    <p id="roiInterpretation" class="text-sm font-semibold text-brand-700 mt-1">Excellent! For every dollar spent on this system, you recover your cost and pocket an additional 50 cents.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3: Time Value of Money & Present Value -->
+                <div id="slide-pv" class="slide-content space-y-6 hidden">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-950 flex items-center gap-2">
+                            <span>⏳</span> Lesson 2: The Time Value of Money
+                        </h2>
+                        <p class="text-slate-500 mt-1">Why future money is worth less than a dollar today.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                        <div class="space-y-4 text-slate-600 text-sm md:text-base leading-relaxed">
+                            <p>
+                                Imagine a customer offers to pay you $1,000 today, OR $1,000 in three years. Which do you choose?
+                            </p>
+                            <p>
+                                You choose <strong>today</strong>! Why? Because if you have the $1,000 today, you can invest it (for example, in a high-yield savings account earning interest) or use it to grow your business. By year three, that $1,000 would have grown to much more.
+                            </p>
+                            <p>
+                                To compare future savings of an IT project against costs incurred <strong>today</strong>, we must discount future money back to its equivalent value today. We use this formula:
+                            </p>
+
+                            <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-center shadow-inner my-2">
+                                $$PV = \frac{FV}{(1 + r)^n}$$
+                            </div>
+
+                            <p class="text-xs text-slate-500">
+                                Where $FV$ is Future Value, $r$ is the Discount Rate (interest rate), and $n$ is the number of years.
+                            </p>
+                        </div>
+
+                        <!-- PV Dynamic Tool -->
+                        <div class="bg-slate-50 border border-slate-200 p-5 rounded-2xl space-y-4">
+                            <h3 class="font-bold text-slate-800 border-b border-slate-200 pb-2 flex items-center justify-between">
+                                <span>Present Value Shrinkage Calculator</span>
+                                <span class="bg-brand-100 text-brand-800 text-xs px-2 py-1 rounded">Live Sandbox</span>
+                            </h3>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                                        <span>FUTURE CASH OUTCOME (FV):</span>
+                                        <span class="text-brand-700 font-bold" id="pvFVLabel">$1,000</span>
+                                    </div>
+                                    <input type="range" id="pvFV" min="500" max="10000" step="100" value="1000" oninput="updatePV()" class="w-full accent-emerald-600 cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                                        <span>DISCOUNT RATE (r):</span>
+                                        <span class="text-brand-700 font-bold" id="pvRateLabel">10%</span>
+                                    </div>
+                                    <input type="range" id="pvRate" min="2" max="25" step="1" value="10" oninput="updatePV()" class="w-full accent-emerald-600 cursor-pointer">
+                                </div>
+
+                                <div>
+                                    <div class="flex justify-between text-xs font-semibold text-slate-600 mb-1">
+                                        <span>YEARS AWAY (n):</span>
+                                        <span class="text-brand-700 font-bold" id="pvYearsLabel">3 Years</span>
+                                    </div>
+                                    <input type="range" id="pvYears" min="1" max="10" step="1" value="3" oninput="updatePV()" class="w-full accent-emerald-600 cursor-pointer">
+                                </div>
+                            </div>
+
+                            <!-- PV Visualizer Output -->
+                            <div class="bg-white border border-slate-200 p-4 rounded-xl text-center space-y-2">
+                                <span class="text-xs uppercase text-slate-400 font-bold tracking-widest block">Formula Output</span>
+                                <div id="pvFormulaOutput" class="text-slate-800 text-base font-serif py-1">
+                                    $$PV = \frac{1,000}{(1 + 0.10)^3} = 751.31$$
+                                </div>
+                                <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-sm">
+                                    <span class="text-slate-500 font-medium">Future Value ($1,000) shrunk by:</span>
+                                    <span id="pvShrinkagePercent" class="font-bold text-red-600">-24.9%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 4: Net Present Value (NPV) Simulator -->
+                <div id="slide-npv" class="slide-content space-y-6 hidden">
+                    <div>
+                        <h2 class="text-2xl font-bold text-slate-950 flex items-center gap-2">
+                            <span>📊</span> Lesson 3: The Ultimate IT Project Simulator
+                        </h2>
+                        <p class="text-slate-500 mt-1">Help the executive board select the most profitable IT investment using Net Present Value (NPV).</p>
+                    </div>
+
+                    <div class="space-y-4">
+                        <p class="text-sm text-slate-600">
+                            When building software, we spend money in Year 0, and then enjoy benefits over the next 3 to 5 years. <strong class="text-slate-800">Net Present Value (NPV)</strong> sums the present value of every cash inflow and subtracts the initial cost. If NPV is greater than $0, the project is a financial "GO"!
+                        </p>
+
+                        <!-- Simulation Scenario Selection -->
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-start">
+                            
+                            <!-- Left: Interactive Controls -->
+                            <div class="md:col-span-5 bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-4">
+                                <h3 class="font-bold text-slate-800 text-sm border-b border-slate-100 pb-2">Simulator Settings</h3>
+                                
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wide mb-1">Company Discount Rate (Hurdle Rate):</label>
+                                    <div class="flex items-center gap-2">
+                                        <input type="range" id="npvDiscountRate" min="4" max="20" step="1" value="8" oninput="calculateNPVSimulator()" class="flex-grow accent-emerald-600 cursor-pointer">
+                                        <span id="npvDiscountLabel" class="text-sm font-bold text-brand-800 w-12 text-right">8%</span>
+                                    </div>
+                                    <p class="text-slate-400 text-[10px] mt-1">This represents the baseline profit return the company requires.</p>
+                                </div>
+
+                                <div class="border-t border-slate-200 pt-3 space-y-2">
+                                    <span class="block text-xs font-bold text-slate-500 uppercase">IT Project Choices:</span>
+                                    
+                                    <label class="flex items-start p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:border-brand-600 transition-colors">
+                                        <input type="radio" name="projectSelect" value="cloud" checked onchange="calculateNPVSimulator()" class="mt-1 mr-3 accent-brand-600">
+                                        <div>
+                                            <span class="font-bold text-xs text-slate-800 block">Project Alpha: Cloud Migration</span>
+                                            <span class="text-[11px] text-slate-500">Low upfront cost, immediate steady savings.</span>
+                                        </div>
+                                    </label>
+
+                                    <label class="flex items-start p-3 rounded-xl border border-slate-200 bg-white cursor-pointer hover:border-brand-600 transition-colors">
+                                        <input type="radio" name="projectSelect" value="crm" onchange="calculateNPVSimulator()" class="mt-1 mr-3 accent-brand-600">
+                                        <div>
+                                            <span class="font-bold text-xs text-slate-800 block">Project Beta: Custom CRM App</span>
+                                            <span class="text-[11px] text-slate-500">High upfront build, massive return starting late.</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Right: Analysis Visual Output -->
+                            <div class="md:col-span-7 bg-white border border-slate-200 rounded-2xl p-5 space-y-4">
+                                <div class="flex justify-between items-center border-b border-slate-100 pb-2">
+                                    <h4 id="simProjectTitle" class="font-bold text-slate-900 text-sm">Project Alpha</h4>
+                                    <span id="simNPVBadge" class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-bold">NPV: +$4,120</span>
+                                </div>
+
+                                <!-- Cashflow breakdown table -->
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-xs text-left">
+                                        <thead>
+                                            <tr class="text-slate-400 border-b border-slate-100">
+                                                <th class="py-1">Year</th>
+                                                <th class="py-1 text-right">Raw Cashflow</th>
+                                                <th class="py-1 text-right">Discount Formula</th>
+                                                <th class="py-1 text-right">Present Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="npvTableBody" class="divide-y divide-slate-100 font-mono">
+                                            <!-- Generated dynamically by Javascript -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <!-- Summary assessment -->
+                                <div class="bg-brand-50 rounded-xl p-3 border border-brand-100 text-xs text-brand-900">
+                                    <strong class="block mb-1">👨‍🏫 Professor Douglas's Analysis:</strong>
+                                    <p id="npvProfessorSummary">Loading simulated financial evaluation...</p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 5: Interactive Quiz & Graduation -->
+                <div id="slide-quiz" class="slide-content space-y-6 hidden">
+                    <div class="pb-4 border-b border-slate-100">
+                        <h2 class="text-2xl font-bold text-slate-950 flex items-center gap-2">
+                            <span>🎓</span> Final Exam & Laboratory Graduation
+                        </h2>
+                        <p class="text-slate-500 mt-1">Demonstrate your financial savvy to unlock your workshop certificate.</p>
+                    </div>
+
+                    <!-- Certification View (shown only when passing) -->
+                    <div id="certificationCard" class="hidden bg-gradient-to-br from-amber-50 to-amber-100 border-2 border-amber-300 rounded-2xl p-6 text-center space-y-4 shadow-md relative overflow-hidden">
+                        <!-- Graphic element -->
+                        <div class="absolute -right-12 -top-12 text-slate-900/5 text-9xl select-none font-serif">A+</div>
+                        
+                        <div class="w-16 h-16 bg-amber-400 text-white rounded-full flex items-center justify-center mx-auto text-3xl shadow-md border-4 border-white animate-bounce">
+                            🏆
+                        </div>
+                        <div class="space-y-1">
+                            <h3 class="text-xl font-bold text-amber-900 tracking-wide">Financial Analysis Certification</h3>
+                            <p class="text-xs text-amber-800 font-serif italic">Awarded by Professor Douglas, SAD Department</p>
+                        </div>
+                        <div class="bg-white/80 border border-amber-200 py-3 px-6 rounded-lg max-w-sm mx-auto shadow-inner">
+                            <span class="text-xs text-slate-400 font-bold block uppercase tracking-wider">Recipient:</span>
+                            <span class="text-base font-bold text-slate-800" id="gradStudentName">SAD Freshman Student</span>
+                        </div>
+                        <p class="text-xs text-amber-800 max-w-md mx-auto">
+                            "This student has demonstrated dynamic mastery over System Cost-Benefit Analysis, calculating ROI, tracking Discount Shrinkage, and evaluating multi-year IT solutions using NPV."
+                        </p>
+                        <button onclick="resetQuiz()" class="text-xs text-slate-500 hover:text-slate-800 underline font-medium">
+                            Retake Quiz
+                        </button>
+                    </div>
+
+                    <!-- Interactive Questions View -->
+                    <div id="quizContainer" class="space-y-6">
+                        <div class="space-y-4">
+                            <!-- Question Info Header -->
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs uppercase font-bold text-brand-700 tracking-wider" id="questionCounter">Question 1 of 3</span>
+                                <span class="text-xs font-semibold bg-slate-100 px-2 py-1 rounded" id="quizScore">Score: 0/0</span>
+                            </div>
+
+                            <!-- Question Statement -->
+                            <p id="quizQuestionText" class="text-base font-bold text-slate-900 leading-snug">
+                                What is the correct definition of Return on Investment (ROI)?
+                            </p>
+
+                            <!-- Options Group -->
+                            <div class="space-y-2" id="quizOptionsContainer">
+                                <!-- Populated dynamically by javascript -->
+                            </div>
+                        </div>
+
+                        <!-- Feedback Message -->
+                        <div id="quizFeedback" class="hidden p-4 rounded-xl text-sm border">
+                            <!-- Populated dynamically -->
+                        </div>
+
+                        <!-- Quiz Action Button -->
+                        <div class="flex justify-end">
+                            <button id="quizActionBtn" onclick="handleQuizAction()" class="bg-slate-900 text-white hover:bg-slate-800 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm">
+                                Submit Answer
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons inside Card -->
+                <div class="flex justify-between items-center pt-6 mt-8 border-t border-slate-100">
+                    <button id="prevBtn" onclick="navigateSlide(-1)" class="px-5 py-2.5 rounded-xl border border-slate-200 text-sm font-semibold text-slate-600 hover:bg-slate-50 transition-colors flex items-center gap-1.5 disabled:opacity-40 disabled:cursor-not-allowed">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                        Previous
+                    </button>
+                    <button id="nextBtn" onclick="navigateSlide(1)" class="bg-brand-600 text-white hover:bg-brand-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all shadow-md shadow-brand-600/10 flex items-center gap-1.5">
+                        Next
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Tutor Sidebar (4 Columns on lg) -->
+        <div class="lg:col-span-4 flex flex-col space-y-6">
+            
+            <!-- Virtual Office Hours (Gemini Classroom Assistant) -->
+            <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex flex-col h-[520px]">
+                <div class="flex items-center space-x-3 border-b border-slate-100 pb-3">
+                    <div class="w-10 h-10 bg-brand-100 text-brand-700 rounded-xl flex items-center justify-center text-xl font-bold flex-shrink-0">
+                        🎓
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900 text-sm">Ask Professor Douglas</h3>
+                        <p class="text-[10px] text-brand-700 font-medium flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                            AI Classroom Assistant
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Chat history area -->
+                <div id="chatHistory" class="flex-grow overflow-y-auto py-4 space-y-3 text-xs pr-1">
+                    <!-- Default Professor Welcome -->
+                    <div class="flex items-start space-x-2">
+                        <div class="w-7 h-7 bg-brand-100 text-brand-800 rounded-full flex items-center justify-center font-bold flex-shrink-0">👨‍🏫</div>
+                        <div class="bg-slate-100 text-slate-800 p-2.5 rounded-xl max-w-[85%] leading-relaxed">
+                            "Hello! If you get stuck on the formulas, need a simpler explanation, or want a real-world analogy, just type your question or click one of the quick prompts below!"
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Chat prompt chips -->
+                <div class="py-2 flex flex-wrap gap-1 border-t border-slate-100">
+                    <button onclick="sendQuickPrompt('Explain discount rates with a simple pizza shop analogy.')" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded-md transition-colors">
+                        🍕 Pizza Analogy
+                    </button>
+                    <button onclick="sendQuickPrompt('Why is NPV safer than ROI for long systems development?')" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded-md transition-colors">
+                        ❓ NPV vs ROI
+                    </button>
+                    <button onclick="sendQuickPrompt('Show me the math breakdown of Year 2 Cloud NPV.')" class="text-[10px] bg-slate-100 hover:bg-slate-200 text-slate-600 px-2 py-1 rounded-md transition-colors">
+                        🧮 Year 2 Breakdown
+                    </button>
+                </div>
+
+                <!-- Input area -->
+                <div class="flex gap-2">
+                    <input type="text" id="chatInput" onkeydown="if(event.key === 'Enter') sendMessage()" placeholder="Ask a question..." class="flex-grow bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:ring-2 focus:ring-brand-600 focus:border-transparent">
+                    <button onclick="sendMessage()" class="bg-brand-600 text-white hover:bg-brand-700 p-2 rounded-xl transition-all flex-shrink-0 shadow-sm shadow-brand-600/10">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Lab Notes Widget -->
+            <div class="bg-slate-900 text-white rounded-2xl p-5 space-y-4">
+                <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                    <span class="text-xs uppercase font-extrabold text-brand-600 tracking-wider">SAD Cheat Sheet</span>
+                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                </div>
+                <div class="space-y-3 text-xs leading-relaxed">
+                    <div>
+                        <span class="text-brand-100 font-bold block">🚨 The Hurdle Rule:</span>
+                        <p class="text-slate-300">If $NPV \ge 0$, you build it. If $NPV < 0$, you reject the project.</p>
+                    </div>
+                    <div>
+                        <span class="text-brand-100 font-bold block">📉 Discount Shrinkage:</span>
+                        <p class="text-slate-300">The higher the discount rate (hurdle), the harder it is for long-term projects to look profitable today.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- Modal Dialog System -->
+    <div id="customModal" class="fixed inset-0 bg-slate-950/40 z-50 flex items-center justify-center p-4 hidden backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-100 space-y-4">
+            <h3 id="modalTitle" class="font-bold text-slate-900 text-lg">Message</h3>
+            <p id="modalBody" class="text-sm text-slate-600 leading-relaxed"></p>
+            <div class="flex justify-end">
+                <button onclick="closeModal()" class="bg-slate-900 text-white hover:bg-slate-800 font-semibold text-xs py-2 px-4 rounded-xl transition-all">
+                    Understood
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script Block for UI, Lesson Logic, and Gemini API integration -->
+    <script>
+        // API Settings
+        const apiKey = ""; // Will be injected at runtime
+        
+        // App State
+        let currentSlideIndex = 0;
+        const slides = ['welcome', 'roi', 'pv', 'npv', 'quiz'];
+        
+        // Quiz Database
+        const quizQuestions = [
+            {
+                question: "If a new server upgrade costs $8,000 and produces savings of $12,000, what is the ROI?",
+                options: [
+                    "50%",
+                    "150%",
+                    "25%",
+                    "12%"
+                ],
+                correctIndex: 0,
+                explanation: "Yes! Total benefit ($12,000) minus total cost ($8,000) is a net benefit of $4,000. $4,000 divided by the cost ($8,000) is 0.50, or 50%."
+            },
+            {
+                question: "Why is a dollar received 3 years in the future worth less to an IT business than a dollar received today?",
+                options: [
+                    "Because of depreciation regulations.",
+                    "Due to opportunity cost (it could have been invested and earned returns) and inflation.",
+                    "Because software values decrease over time.",
+                    "Future currency is legally less valuable."
+                ],
+                correctIndex: 1,
+                explanation: "Exactly! Having money today gives you purchasing power, investment options, and avoids inflation losses."
+            },
+            {
+                question: "Your custom mobile CRM project calculates to have an NPV of -$1,450. As a Systems Analyst, what should you recommend?",
+                options: [
+                    "Reject the project—it doesn't meet the baseline discount hurdle rate.",
+                    "Approve the project anyway because ROI will look positive.",
+                    "Approve it but increase the discount rate to fix it.",
+                    "Wait 5 years before looking at the proposal."
+                ],
+                correctIndex: 0,
+                explanation: "Correct! A negative Net Present Value means the project fails to recover the opportunity cost of capital. Reject it."
+            }
+        ];
+        
+        let quizCurrentIndex = 0;
+        let quizState = 'answering'; // 'answering' or 'feedback'
+        let quizScoreCount = 0;
+
+        // Custom Modal Control
+        function showModal(title, body) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalBody').textContent = body;
+            document.getElementById('customModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('customModal').classList.add('hidden');
+        }
+
+        // Slide Navigation & Navigation Bars
+        function switchTab(slideId) {
+            const index = slides.indexOf(slideId);
+            if (index !== -1) {
+                currentSlideIndex = index;
+                renderSlide();
+            }
+        }
+
+        function navigateSlide(direction) {
+            currentSlideIndex += direction;
+            if (currentSlideIndex < 0) currentSlideIndex = 0;
+            if (currentSlideIndex >= slides.length) currentSlideIndex = slides.length - 1;
+            renderSlide();
+        }
+
+        function renderSlide() {
+            // Hide all slides
+            document.querySelectorAll('.slide-content').forEach(slide => {
+                slide.classList.add('hidden');
+            });
+
+            // Show active slide
+            const currentSlideId = slides[currentSlideIndex];
+            document.getElementById(`slide-${currentSlideId}`).classList.remove('hidden');
+
+            // Update Tab states
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.className = "tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-slate-600 hover:text-slate-900 transition-all duration-200 flex items-center justify-center gap-2";
+            });
+            const activeTab = document.getElementById(`tab-${currentSlideId}`);
+            if (activeTab) {
+                activeTab.className = "tab-btn flex-1 py-3 px-4 text-sm font-semibold rounded-lg text-brand-700 bg-white shadow-sm flex items-center justify-center gap-2 border-b-2 border-brand-600 md:border-b-0";
+            }
+
+            // Button controls
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            prevBtn.disabled = (currentSlideIndex === 0);
+            
+            if (currentSlideIndex === slides.length - 1) {
+                nextBtn.classList.add('hidden');
+            } else {
+                nextBtn.classList.remove('hidden');
+            }
+
+            // Progress tracking math
+            const progressPercent = Math.round(((currentSlideIndex + 1) / slides.length) * 100);
+            document.getElementById('progressBar').style.width = `${progressPercent}%`;
+            document.getElementById('progressText').textContent = `${progressPercent}%`;
+
+            // Trigger equations recalculations for current view
+            if (currentSlideId === 'roi') {
+                updateROI();
+            } else if (currentSlideId === 'pv') {
+                updatePV();
+            } else if (currentSlideId === 'npv') {
+                calculateNPVSimulator();
+            } else if (currentSlideId === 'quiz') {
+                renderQuizQuestion();
+            }
+
+            // Smooth render LaTeX dynamically on slide change
+            triggerMathJax();
+        }
+
+        function triggerMathJax() {
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise().catch(err => console.log('MathJax update error:', err));
+            }
+        }
+
+        // ROI dynamic math calculations
+        function updateROI() {
+            const cost = parseFloat(document.getElementById('roiCost').value);
+            const benefit = parseFloat(document.getElementById('roiBenefit').value);
+
+            document.getElementById('roiCostLabel').textContent = `$${cost.toLocaleString()}`;
+            document.getElementById('roiBenefitLabel').textContent = `$${benefit.toLocaleString()}`;
+
+            const netBenefit = benefit - cost;
+            const roiPercent = Math.round((netBenefit / cost) * 100);
+
+            // Update formula view block dynamically
+            const formulaElement = document.getElementById('roiFormulaOutput');
+            formulaElement.innerHTML = `$$ROI = \\frac{${benefit.toLocaleString()} - ${cost.toLocaleString()}}{${cost.toLocaleString()}} \\times 100\\% = ${roiPercent}\\%$$`;
+
+            // Adjust professor interpretations dynamically
+            const interpElement = document.getElementById('roiInterpretation');
+            if (roiPercent > 50) {
+                interpElement.className = "text-sm font-semibold text-emerald-600 mt-1";
+                interpElement.innerHTML = `🚀 Fantastic! For every dollar spent, you generate your cost back PLUS an additional $${(netBenefit/cost).toFixed(2)} in savings!`;
+            } else if (roiPercent > 0) {
+                interpElement.className = "text-sm font-semibold text-brand-700 mt-1";
+                interpElement.innerHTML = `👍 Good system. This project is profitable, earning you $${(netBenefit/cost).toFixed(2)} extra per dollar invested.`;
+            } else if (roiPercent === 0) {
+                interpElement.className = "text-sm font-semibold text-amber-600 mt-1";
+                interpElement.innerHTML = `⚠️ Break-even project. It yields exactly what it costs to build. High risk with no extra margin.`;
+            } else {
+                interpElement.className = "text-sm font-semibold text-red-600 mt-1";
+                interpElement.innerHTML = `❌ Uh oh! This project has a negative ROI of ${roiPercent}%. You will actively lose money if you build this system.`;
+            }
+
+            triggerMathJax();
+        }
+
+        // PV dynamic math calculations
+        function updatePV() {
+            const fv = parseFloat(document.getElementById('pvFV').value);
+            const ratePercent = parseFloat(document.getElementById('pvRate').value);
+            const years = parseInt(document.getElementById('pvYears').value);
+
+            const r = ratePercent / 100;
+            const pv = fv / Math.pow(1 + r, years);
+            const lossPercent = ((fv - pv) / fv) * 100;
+
+            document.getElementById('pvFVLabel').textContent = `$${fv.toLocaleString()}`;
+            document.getElementById('pvRateLabel').textContent = `${ratePercent}%`;
+            document.getElementById('pvYearsLabel').textContent = `${years} Year${years > 1 ? 's' : ''}`;
+
+            const formulaElement = document.getElementById('pvFormulaOutput');
+            formulaElement.innerHTML = `$$PV = \\frac{${fv.toLocaleString()}}{(1 + ${r.toFixed(2)})^{${years}}} = $${pv.toFixed(2)}$$`;
+
+            const lossPercentText = document.getElementById('pvShrinkagePercent');
+            lossPercentText.textContent = `-${lossPercent.toFixed(1)}%`;
+
+            triggerMathJax();
+        }
+
+        // Dynamic multi-year NPV calculator simulation
+        function calculateNPVSimulator() {
+            const discountPercent = parseFloat(document.getElementById('npvDiscountRate').value);
+            document.getElementById('npvDiscountLabel').textContent = `${discountPercent}%`;
+
+            const selectedProj = document.querySelector('input[name="projectSelect"]:checked').value;
+            const r = discountPercent / 100;
+
+            let initialCost = 0;
+            let cashflows = [];
+            let projectTitle = "";
+
+            if (selectedProj === 'cloud') {
+                projectTitle = "Project Alpha: Cloud Migration";
+                initialCost = 15000;
+                cashflows = [6000, 6000, 6000, 6000]; // 4 years of solid steady returns
+            } else {
+                projectTitle = "Project Beta: Custom CRM App";
+                initialCost = 35000;
+                cashflows = [5000, 12000, 20000, 25000]; // High build cost, compounding future gains
+            }
+
+            document.getElementById('simProjectTitle').textContent = projectTitle;
+
+            const tableBody = document.getElementById('npvTableBody');
+            tableBody.innerHTML = '';
+
+            // Add Year 0 row (upfront expense)
+            let npvSum = -initialCost;
+            const rowZero = `
+                <tr class="text-slate-800">
+                    <td class="py-2 font-bold text-slate-500">Year 0</td>
+                    <td class="py-2 text-right text-red-600">-$${initialCost.toLocaleString()}</td>
+                    <td class="py-2 text-right text-slate-400">Initial Cost</td>
+                    <td class="py-2 text-right font-bold text-red-600">-$${initialCost.toLocaleString()}</td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', rowZero);
+
+            // Calculate each year's discounted value
+            cashflows.forEach((cashflow, index) => {
+                const year = index + 1;
+                const pv = cashflow / Math.pow(1 + r, year);
+                npvSum += pv;
+
+                const row = `
+                    <tr class="text-slate-700">
+                        <td class="py-2 text-slate-500">Year ${year}</td>
+                        <td class="py-2 text-right text-emerald-600">+$${cashflow.toLocaleString()}</td>
+                        <td class="py-2 text-right text-slate-400">$\\frac{${cashflow}}{(1+r)^${year}}$</td>
+                        <td class="py-2 text-right">+$${pv.toFixed(2)}</td>
+                    </tr>
+                `;
+                tableBody.insertAdjacentHTML('beforeend', row);
+            });
+
+            // Update simulator header badge state
+            const badge = document.getElementById('simNPVBadge');
+            if (npvSum >= 0) {
+                badge.className = "bg-emerald-100 text-emerald-800 text-xs px-2.5 py-1 rounded-full font-bold animate-pulse";
+                badge.textContent = `NPV: +$${npvSum.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            } else {
+                badge.className = "bg-red-100 text-red-800 text-xs px-2.5 py-1 rounded-full font-bold";
+                badge.textContent = `NPV: -$${Math.abs(npvSum).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+
+            // Tailored analytical summary for each project outcome
+            const summaryElement = document.getElementById('npvProfessorSummary');
+            if (selectedProj === 'cloud') {
+                if (npvSum >= 0) {
+                    summaryElement.innerHTML = `Project Alpha is highly resilient! Because the returns start immediately, the discount rate doesn't affect it as harshly. At ${discountPercent}%, this cloud project creates a surplus value of <strong class="text-emerald-700">$${npvSum.toFixed(2)}</strong> today. <strong class="text-slate-800">Recommend this project!</strong>`;
+                } else {
+                    summaryElement.innerHTML = `Even steady systems can fail if the discount rate is set too high. At ${discountPercent}%, Project Alpha's NPV falls to <strong class="text-red-700">-$${Math.abs(npvSum).toFixed(2)}</strong>. This means the money arrives too slowly to beat other investments!`;
+                }
+            } else {
+                // Beta CRM Summary
+                if (npvSum >= 0) {
+                    summaryElement.innerHTML = `Project Beta (CRM) requires a massive initial budget of $35,000, but is incredibly lucrative in Years 3 and 4. Even with an ${discountPercent}% interest hurdle, it creates a massive profit surplus of <strong class="text-emerald-700">$${npvSum.toFixed(2)}</strong>. <strong class="text-slate-800">High build cost, but worth the wait!</strong>`;
+                } else {
+                    summaryElement.innerHTML = `Watch closely! At ${discountPercent}%, Project Beta yields an NPV of <strong class="text-red-700">-$${Math.abs(npvSum).toFixed(2)}</strong>. Even though the CRM produces a raw benefit of $62,000 against $35,000 in costs, those large cashflows are so far out (Years 3 & 4) that they get shrunk into insignificance!`;
+                }
+            }
+
+            triggerMathJax();
+        }
+
+        // Quiz Mechanics
+        function renderQuizQuestion() {
+            const container = document.getElementById('quizOptionsContainer');
+            const qCounter = document.getElementById('questionCounter');
+            const scoreLabel = document.getElementById('quizScore');
+            const questionText = document.getElementById('quizQuestionText');
+            const feedback = document.getElementById('quizFeedback');
+            const actionBtn = document.getElementById('quizActionBtn');
+
+            // Hide feedback element
+            feedback.className = "hidden p-4 rounded-xl text-sm border";
+            feedback.innerHTML = "";
+
+            if (quizCurrentIndex >= quizQuestions.length) {
+                // Show certification view
+                document.getElementById('quizContainer').classList.add('hidden');
+                document.getElementById('certificationCard').classList.remove('hidden');
+                return;
+            } else {
+                document.getElementById('quizContainer').classList.remove('hidden');
+                document.getElementById('certificationCard').classList.add('hidden');
+            }
+
+            const currentQ = quizQuestions[quizCurrentIndex];
+            qCounter.textContent = `Question ${quizCurrentIndex + 1} of ${quizQuestions.length}`;
+            scoreLabel.textContent = `Score: ${quizScoreCount}/${quizQuestions.length}`;
+            questionText.textContent = currentQ.question;
+            container.innerHTML = '';
+
+            currentQ.options.forEach((opt, idx) => {
+                const optBtn = `
+                    <button onclick="selectQuizOption(${idx})" id="opt-${idx}" class="quiz-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-sm font-medium flex items-center gap-3">
+                        <span class="w-6 h-6 rounded-full border border-slate-300 flex items-center justify-center text-xs text-slate-500 font-bold flex-shrink-0" id="bullet-${idx}">${String.fromCharCode(65 + idx)}</span>
+                        <span>${opt}</span>
+                    </button>
+                `;
+                container.insertAdjacentHTML('beforeend', optBtn);
+            });
+
+            actionBtn.textContent = "Submit Answer";
+            quizState = 'answering';
+        }
+
+        let selectedOptionIdx = null;
+
+        function selectQuizOption(index) {
+            if (quizState !== 'answering') return;
+            selectedOptionIdx = index;
+
+            document.querySelectorAll('.quiz-option-btn').forEach(btn => {
+                btn.className = "quiz-option-btn w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-slate-400 hover:bg-slate-50 transition-all text-sm font-medium flex items-center gap-3";
+            });
+
+            const selectedBtn = document.getElementById(`opt-${index}`);
+            selectedBtn.className = "quiz-option-btn w-full text-left p-3.5 rounded-xl border-2 border-brand-600 bg-brand-50/50 transition-all text-sm font-medium flex items-center gap-3";
+        }
+
+        function handleQuizAction() {
+            const feedback = document.getElementById('quizFeedback');
+            const actionBtn = document.getElementById('quizActionBtn');
+
+            if (quizState === 'answering') {
+                if (selectedOptionIdx === null) {
+                    showModal("Attention", "Please select an answer option before submitting.");
+                    return;
+                }
+
+                const currentQ = quizQuestions[quizCurrentIndex];
+                feedback.classList.remove('hidden');
+
+                if (selectedOptionIdx === currentQ.correctIndex) {
+                    quizScoreCount++;
+                    feedback.className = "p-4 rounded-xl text-sm border border-emerald-200 bg-emerald-50 text-emerald-800";
+                    feedback.innerHTML = `<strong>🎉 Correct!</strong> ${currentQ.explanation}`;
+                } else {
+                    feedback.className = "p-4 rounded-xl text-sm border border-red-200 bg-red-50/50 text-red-800";
+                    feedback.innerHTML = `<strong>❌ Incorrect.</strong> The correct answer was: <em>${currentQ.options[currentQ.correctIndex]}</em>.<br><br>${currentQ.explanation}`;
+                }
+
+                actionBtn.textContent = "Continue";
+                quizState = 'feedback';
+            } else {
+                quizCurrentIndex++;
+                selectedOptionIdx = null;
+                renderQuizQuestion();
+            }
+        }
+
+        function resetQuiz() {
+            quizCurrentIndex = 0;
+            quizScoreCount = 0;
+            quizState = 'answering';
+            selectedOptionIdx = null;
+            renderQuizQuestion();
+        }
+
+        // Live chatbot interaction framework (Gemini AI Classroom integration)
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const query = input.value.trim();
+            if (!query) return;
+
+            // Render student user bubble
+            appendChatBubble(query, 'student');
+            input.value = '';
+
+            // Add dynamic typing loading indicator
+            const typingId = appendTypingIndicator();
+
+            try {
+                const responseText = await callGeminiAPI(query);
+                removeTypingIndicator(typingId);
+                appendChatBubble(responseText, 'professor');
+            } catch (error) {
+                console.error("Gemini Assistant Failure:", error);
+                removeTypingIndicator(typingId);
+                appendChatBubble("Classroom Wi-Fi seems a little slow right now! Here is a tip: NPV shows the dynamic value of future profits, while ROI focuses only on raw margins. Ask me to break that down further!", 'professor');
+            }
+        }
+
+        // Wrapper for fast chips interaction
+        function sendQuickPrompt(promptText) {
+            document.getElementById('chatInput').value = promptText;
+            sendMessage();
+        }
+
+        function appendChatBubble(text, sender) {
+            const history = document.getElementById('chatHistory');
+            const bubbleId = 'bubble-' + Math.random().toString(36).substr(2, 9);
+            
+            let bubbleHTML = '';
+            if (sender === 'professor') {
+                bubbleHTML = `
+                    <div class="flex items-start space-x-2" id="${bubbleId}">
+                        <div class="w-7 h-7 bg-brand-100 text-brand-800 rounded-full flex items-center justify-center font-bold flex-shrink-0 text-xs">👨‍🏫</div>
+                        <div class="bg-slate-100 text-slate-800 p-2.5 rounded-xl max-w-[85%] leading-relaxed whitespace-pre-line">
+                            ${text}
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Student block
+                bubbleHTML = `
+                    <div class="flex items-start space-x-2 justify-end" id="${bubbleId}">
+                        <div class="bg-brand-600 text-white p-2.5 rounded-xl max-w-[85%] leading-relaxed">
+                            ${text}
+                        </div>
+                        <div class="w-7 h-7 bg-brand-800 text-white rounded-full flex items-center justify-center font-bold flex-shrink-0 text-[10px]">YOU</div>
+                    </div>
+                `;
+            }
+            
+            history.insertAdjacentHTML('beforeend', bubbleHTML);
+            history.scrollTop = history.scrollHeight;
+            return bubbleId;
+        }
+
+        function appendTypingIndicator() {
+            const history = document.getElementById('chatHistory');
+            const id = 'typing-' + Math.random().toString(36).substr(2, 9);
+            const typingHTML = `
+                <div class="flex items-center space-x-2 text-slate-400" id="${id}">
+                    <div class="w-7 h-7 bg-slate-200 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0">💬</div>
+                    <div class="bg-slate-100 p-2.5 rounded-xl flex items-center space-x-1">
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.2s"></span>
+                        <span class="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style="animation-delay: 0.4s"></span>
+                    </div>
+                </div>
+            `;
+            history.insertAdjacentHTML('beforeend', typingHTML);
+            history.scrollTop = history.scrollHeight;
+            return id;
+        }
+
+        function removeTypingIndicator(id) {
+            const element = document.getElementById(id);
+            if (element) element.remove();
+        }
+
+        // Custom call function integrating instructions guidelines
+        async function callGeminiAPI(userQuery) {
+            const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            const systemPrompt = "You are Professor Douglas, a friendly, encouraging community college professor teaching Systems Analysis and Design to freshmen with zero prior knowledge of finance. Your goal is to simplify terms like ROI, Present Value (PV), discount rate, and NPV. Always use relatable analogies (like building pizza delivery systems, buying lawnmowers for a side hustle, or choosing video games). Keep explanations simple, optimistic, short (1-2 quick paragraphs), and always end with an encouraging teaching check-in question.";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                systemInstruction: { parts: [{ text: systemPrompt }] }
+            };
+
+            // Exponential backoff retrying pattern up to 5 times
+            let delay = 1000;
+            for (let i = 0; i < 5; i++) {
+                try {
+                    const response = await fetch(endpoint, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.candidates?.[0]?.content?.parts?.[0]?.text || "Excellent question! Let's examine this system calculation further together.";
+                    }
+                } catch (e) {
+                    console.error("Fetch attempt error:", e);
+                }
+                
+                // Backoff wait
+                await new Promise(resolve => setTimeout(resolve, delay));
+                delay *= 2;
+            }
+
+            throw new Error("Unable to contact Professor Douglas' virtual brain office after 5 attempts.");
+        }
+
+        // Initialize App on window load
+        window.onload = function() {
+            renderSlide();
+        };
+    </script>
+</body>
+</html>
