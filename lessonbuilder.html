@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Learning: Electrical Engineering Formulas</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .progress-bar { transition: width 0.4s ease-in-out; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <header class="bg-indigo-900 text-white shadow-md sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center gap-3">
+                <div class="bg-indigo-600 p-2 rounded-lg shadow-inner">
+                    <i class="fa-solid fa-charging-station text-xl text-amber-400"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold tracking-tight">Introduction to Engineering</h1>
+                    <p class="text-xs text-indigo-200">Module: Electrical Engineering Formulas</p>
+                </div>
+            </div>
+            <div class="w-full sm:w-64 bg-indigo-950 rounded-full h-4 relative overflow-hidden border border-indigo-700">
+                <div id="main-progress" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full progress-bar" style="width: 5%;"></div>
+                <span id="progress-text" class="absolute inset-0 flex items-center justify-center text-[10px] font-bold text-white drop-shadow">Step 1 of 6</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-8 pb-24">
+        
+        <section id="step-1" class="tab-content active bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-indigo-100 text-indigo-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Step 1: Context &amp; Prior Knowledge</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-4">Welcome to Electrical Foundations</h2>
+            <p class="text-slate-600 mb-6 leading-relaxed">
+                Before we dive into the core mathematical formulas that dictate how modern circuitry behaves, let's gauge your current comfort level and activate your brain's memory schemas. Don't worry if these terms look unfamiliar—this is a baseline diagnostic tool to customize your focus area.
+            </p>
+
+            <div class="space-y-6">
+                <div>
+                    <label class="block font-medium text-slate-700 mb-2">Rate your current familiarity with the following terms (1 = Brand New, 5 = Expert):</label>
+                    <div class="space-y-4 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                <span>Ohm's Law ($V = I \times R$)</span>
+                                <span id="val-slider-1">3</span>
+                            </div>
+                            <input type="range" min="1" max="5" value="3" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="document.getElementById('val-slider-1').innerText = this.value">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                <span>Joule's Law / Electric Power ($P = V \times I$)</span>
+                                <span id="val-slider-2">3</span>
+                            </div>
+                            <input type="range" min="1" max="5" value="3" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="document.getElementById('val-slider-2').innerText = this.value">
+                        </div>
+                        <div>
+                            <div class="flex justify-between text-xs font-semibold text-slate-500 mb-1">
+                                <span>Equivalent Resistance (Series vs. Parallel configurations)</span>
+                                <span id="val-slider-3">3</span>
+                            </div>
+                            <input type="range" min="1" max="5" value="3" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-indigo-600" oninput="document.getElementById('val-slider-3').innerText = this.value">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="border-t border-slate-100 pt-4">
+                    <label for="prior-knowledge-text" class="block font-medium text-slate-700 mb-1">Predict-and-Reflect Prompt</label>
+                    <p class="text-xs text-slate-500 mb-2">Think about a phone charger getting warm while plugged into a wall outlet. Why do you think electrical components generate heat when operating?</p>
+                    <textarea id="prior-knowledge-text" rows="3" class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm" placeholder="Write 2-3 sentences in your own words. Do not look up definitions; write down your intuitive guess based on physical properties or personal experiences."></textarea>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button onclick="navigateToStep(2)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition inline-flex items-center gap-2">
+                    Begin Lesson <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-2" class="tab-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Concept 1 of 4</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-4">Ohm's Law: The Core Relationship</h2>
+            
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                Ohm’s Law establishes the fundamental triad of electrical circuit analysis: Voltage ($V$), Current ($I$), and Resistance ($R$). 
+                Voltage acts as the electrical pressure pushing charges through a circuit, Current represents the structural rate of flow of those charges past a point per second, and Resistance signifies the physical opposition to that flow. 
+                Mathematically balanced, the formula states that the voltage across a conductor is directly proportional to the current flowing through it, yielding:
+            </p>
+            
+            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r-xl">
+                <p class="text-center text-xl font-mono text-indigo-900">$$V = I \times R$$</p>
+                <p class="text-center text-xs text-indigo-700 mt-1">Where: V = Volts (V), I = Amperes (A), and R = Ohms ($\Omega$)</p>
+            </div>
+
+            <blockquote class="bg-amber-50 border-l-4 border-amber-500 p-3 my-4 rounded-r-xl text-sm text-amber-900">
+                <strong class="font-semibold"><i class="fa-solid fa-lightbulb"></i> Concrete Example:</strong> 
+                Consider a standard automotive 12V battery connected to a headlamp assembly that possesses an internal electrical resistance of 3&nbsp;$\Omega$. To determine how much current is pulled from the battery, we rearrange Ohm's Law to calculate $I = V / R$. Substituting our values gives $12\text{ V} / 3\text{ }\Omega = 4\text{ A}$.
+            </blockquote>
+
+            <div class="mt-8 border-t border-slate-100 pt-6">
+                <h3 class="text-lg font-semibold text-slate-900 mb-3"><i class="fa-solid fa-circle-question text-indigo-600 mr-2"></i>Concept Check: Ohm's Law</h3>
+                <p class="text-sm text-slate-600 mb-4">A biological sensor circuit requires a current of 0.02 A to run safely. If the circuit is driven by a steady 5V micro-controller pin, what exact value must the current-limiting resistor be?</p>
+                
+                <div class="space-y-3">
+                    <button onclick="checkAnswer(this, false, 'c1-feedback', 'Incorrect. Remember to isolate R by rearranging the formula to $R = V / I$. Multiplying the values gives an incorrect result.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">A</span>
+                        <span class="text-sm text-slate-700">0.1 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, false, 'c1-feedback', 'Incorrect. Check your algebraic isolation of R. It should be Voltage divided by Current, not Current divided by Voltage.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">B</span>
+                        <span class="text-sm text-slate-700">0.004 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, true, 'c1-feedback', 'Correct! Rearranging Ohm\'s law yields $R = V / I$. Plugging in the values gives $5\\text{ V} / 0.02\\text{ A} = 250\\text{ }\\Omega$. This resistor prevents excess current from destroying the sensor.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">C</span>
+                        <span class="text-sm text-slate-700">250 $\Omega$</span>
+                    </button>
+                </div>
+                <div id="c1-feedback" class="mt-4 hidden p-4 rounded-xl text-sm"></div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigateToStep(1)" class="border border-slate-300 text-slate-600 font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                </button>
+                <button onclick="navigateToStep(3)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition inline-flex items-center gap-2">
+                    Next Concept <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-3" class="tab-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Concept 2 of 4</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-4">Electrical Power: Joule's Law</h2>
+            
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                While Ohm's law calculates physical movement limits, Electrical Power ($P$) measures the rate at which energy is delivered or transformed by a circuit element per unit of time. 
+                Joule’s Law describes how power is directly dependent on both the delivery mechanism pressure (Voltage) and the volume of charge carriers acting within it (Current). 
+                By substituting Ohm's variables into Joule's standard formula, we can also derive alternative versions linked directly to circuit friction (Resistance), yielding multiple tools to measure active work or thermal dispersion.
+            </p>
+            
+            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r-xl">
+                <p class="text-center text-xl font-mono text-indigo-900">$$P = V \times I = I^2 \times R = \frac{V^2}{R}$$</p>
+                <p class="text-center text-xs text-indigo-700 mt-1">Where: P = Watts (W), V = Volts (V), I = Amps (A), and R = Ohms ($\Omega$)</p>
+            </div>
+
+            <blockquote class="bg-amber-50 border-l-4 border-amber-500 p-3 my-4 rounded-r-xl text-sm text-amber-900">
+                <strong class="font-semibold"><i class="fa-solid fa-lightbulb"></i> Concrete Example:</strong> 
+                An industrial space heater with an elements resistance rating of 10&nbsp;$\Omega$ is wired directly into a standard 120V electrical outlet. To calculate how much thermal power output it generates without calculating current first, we deploy the final variant of the formula: $P = V^2 / R$. This produces $(120\text{ V})^2 / 10\text{ }\Omega = 14,400 / 10 = 1,440\text{ W}$ (or 1.44 kW).
+            </blockquote>
+
+            <div class="mt-8 border-t border-slate-100 pt-6">
+                <h3 class="text-lg font-semibold text-slate-900 mb-3"><i class="fa-solid fa-circle-question text-indigo-600 mr-2"></i>Concept Check: Joule's Law</h3>
+                <p class="text-sm text-slate-600 mb-4">If the internal current operating within a miniature server computer chip doubles while its physical layout resistance remains completely constant, what happens to the power converted into waste heat?</p>
+                
+                <div class="space-y-3">
+                    <button onclick="checkAnswer(this, false, 'c2-feedback', 'Incorrect. Look closely at the relationship of Current inside the power equation: $P = I^2 \\times R$. It is non-linear.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">A</span>
+                        <span class="text-sm text-slate-700">The waste heat production doubles.</span>
+                    </button>
+                    <button onclick="checkAnswer(this, true, 'c2-feedback', 'Correct! Because power depends on the square of the current ($P = I^2 \\times R$), doubling the current causes a factor of $2^2 = 4$ increase in power consumption and heat generation. This exponential increase explains why overheating is a massive problem in high-performance computing.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">B</span>
+                        <span class="text-sm text-slate-700">The waste heat production quadruples (increases by 4x).</span>
+                    </button>
+                    <button onclick="checkAnswer(this, false, 'c2-feedback', 'Incorrect. The current variable is in the numerator and squared; power increases, it does not decrease.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">C</span>
+                        <span class="text-sm text-slate-700">The waste heat production is cut in half.</span>
+                    </button>
+                </div>
+                <div id="c2-feedback" class="mt-4 hidden p-4 rounded-xl text-sm"></div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigateToStep(2)" class="border border-slate-300 text-slate-600 font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                </button>
+                <button onclick="navigateToStep(4)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition inline-flex items-center gap-2">
+                    Next Concept <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-4" class="tab-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Concept 3 of 4</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-4">Series Equivalent Resistance</h2>
+            
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                In engineering architecture, components are connected together in distinct structural patterns. A **Series Circuit** features components arranged sequentially along a single continuous pathway. 
+                Because there is only one route for electric charges to travel, the total resistance of the entire layout accumulates directly. 
+                Adding more resistors in series increases opposition to current flow, acting exactly as if you were making a singular resistive channel longer.
+            </p>
+            
+            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r-xl">
+                <p class="text-center text-xl font-mono text-indigo-900">$$R_{eq} = R_1 + R_2 + R_3 + \dots + R_n$$</p>
+                <p class="text-center text-xs text-indigo-700 mt-1">Where: $R_{eq}$ is the total net equivalent resistance in ohms</p>
+            </div>
+
+            
+
+            <blockquote class="bg-amber-50 border-l-4 border-amber-500 p-3 my-4 rounded-r-xl text-sm text-amber-900">
+                <strong class="font-semibold"><i class="fa-solid fa-lightbulb"></i> Concrete Example:</strong> 
+                If three signaling LED indicators with sequential internal line resistances of 150&nbsp;$\Omega$, 200&nbsp;$\Omega$, and 350&nbsp;$\Omega$ are wired directly end-to-end in a strict single-loop series framework, their total unified layout resistance becomes a basic summation: $R_{eq} = 150 + 200 + 350 = 700\text{ }\Omega$.
+            </blockquote>
+
+            <div class="mt-8 border-t border-slate-100 pt-6">
+                <h3 class="text-lg font-semibold text-slate-900 mb-3"><i class="fa-solid fa-circle-question text-indigo-600 mr-2"></i>Concept Check: Series Logic</h3>
+                <p class="text-sm text-slate-600 mb-4">A simple decorative string illumination loop uses five small bulbs wired together in series. Each bulb has an identical internal resistance of 20&nbsp;$\Omega$. What total net load does the master power adapter experience?</p>
+                
+                <div class="space-y-3">
+                    <button onclick="checkAnswer(this, false, 'c3-feedback', 'Incorrect. You divided or calculated for a parallel setup. Series resistances accumulate cleanly by adding up together.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">A</span>
+                        <span class="text-sm text-slate-700">4 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, false, 'c3-feedback', 'Incorrect. Do not just use a single component rating; all five separate components in the path actively oppose flow.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">B</span>
+                        <span class="text-sm text-slate-700">20 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, true, 'c3-feedback', 'Correct! In a series system, $R_{eq} = R_1 + R_2 + R_3 + R_4 + R_5$. Since all five items equal 20 $\\Omega$, the formula resolves to $20 \\times 5 = 100\\text{ }\\Omega$.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">C</span>
+                        <span class="text-sm text-slate-700">100 $\Omega$</span>
+                    </button>
+                </div>
+                <div id="c3-feedback" class="mt-4 hidden p-4 rounded-xl text-sm"></div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigateToStep(3)" class="border border-slate-300 text-slate-600 font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                </button>
+                <button onclick="navigateToStep(5)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition inline-flex items-center gap-2">
+                    Next Concept <i class="fa-solid fa-arrow-right text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-5" class="tab-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Concept 4 of 4</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-4">Parallel Equivalent Resistance</h2>
+            
+            <p class="text-slate-600 mb-4 leading-relaxed">
+                When circuit paths branch away from each other, they create a **Parallel Circuit**. In this framework, all component inputs share a common node connection, and all outputs share another. 
+                Crucially, providing alternate routing pathways makes it *easier* overall for electric charges to flow. 
+                Consequently, the total equivalent resistance ($R_{eq}$) of parallel systems is always **smaller** than the smallest individual resistor value. It is modeled using reciprocal mathematics:
+            </p>
+            
+            <div class="bg-indigo-50 border-l-4 border-indigo-600 p-4 my-4 rounded-r-xl">
+                <p class="text-center text-xl font-mono text-indigo-900">$$\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2} + \frac{1}{R_3} + \dots + \frac{1}{R_n}$$</p>
+                <p class="text-center text-xs text-indigo-700 mt-1">Tip for two resistors: $R_{eq} = (R_1 \times R_2) / (R_1 + R_2)$</p>
+            </div>
+
+            
+
+            <blockquote class="bg-amber-50 border-l-4 border-amber-500 p-3 my-4 rounded-r-xl text-sm text-amber-900">
+                <strong class="font-semibold"><i class="fa-solid fa-lightbulb"></i> Concrete Example:</strong> 
+                Imagine wire leads splitting to supply power concurrently to two audio speakers arranged side-by-side in parallel. If Speaker A measures 8&nbsp;$\Omega$ and Speaker B measures 8&nbsp;$\Omega$, we utilize the parallel reciprocal formula: $1/R_{eq} = 1/8 + 1/8 = 2/8$. Flipping this fraction to find $R_{eq}$ gives $8 / 2 = 4\text{ }\Omega$. Notice the aggregate structural resistance was cut completely in half by opening that parallel lane option.
+            </blockquote>
+
+            <div class="mt-8 border-t border-slate-100 pt-6">
+                <h3 class="text-lg font-semibold text-slate-900 mb-3"><i class="fa-solid fa-circle-question text-indigo-600 mr-2"></i>Concept Check: Parallel Reciprocals</h3>
+                <p class="text-sm text-slate-600 mb-4">A distribution board splits current into two distinct parallel lines containing a 30&nbsp;$\Omega$ test device and a 60&nbsp;$\Omega$ safety module. What total net resistance does the supply terminal see?</p>
+                
+                <div class="space-y-3">
+                    <button onclick="checkAnswer(this, false, 'c4-feedback', 'Incorrect. You added them like a series loop ($30 + 60$). Parallel networks must reduce total net resistance below either starting individual option.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">A</span>
+                        <span class="text-sm text-slate-700">90 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, true, 'c4-feedback', 'Correct! Using the product-over-sum rule: $(30 \\times 60) / (30 + 60) = 1800 / 90 = 20\\text{ }\\Omega$. Alternatively, $1/30 + 1/60 = 2/60 + 1/60 = 3/60$. The reciprocal of $3/60$ is $60/3 = 20\\text{ }\\Omega$. This confirms that the total is lower than the smallest standalone path (which was 30 $\\Omega$).')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">B</span>
+                        <span class="text-sm text-slate-700">20 $\Omega$</span>
+                    </button>
+                    <button onclick="checkAnswer(this, false, 'c4-feedback', 'Incorrect. This represents a simple average. You must add the mathematical fractions ($1/30 + 1/60$) then invert the final result.')" class="w-full text-left p-3.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition flex items-start gap-3">
+                        <span class="w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center text-xs font-bold text-slate-500 shrink-0 mt-0.5">C</span>
+                        <span class="text-sm text-slate-700">45 $\Omega$</span>
+                    </button>
+                </div>
+                <div id="c4-feedback" class="mt-4 hidden p-4 rounded-xl text-sm"></div>
+            </div>
+
+            <div class="mt-8 flex justify-between">
+                <button onclick="navigateToStep(4)" class="border border-slate-300 text-slate-600 font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition inline-flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                </button>
+                <button onclick="navigateToStep(6)" class="bg-indigo-600 hover:bg-indigo-700 text-white font-medium px-6 py-2.5 rounded-lg shadow transition inline-flex items-center gap-2">
+                    Proceed to Exit Ticket <i class="fa-solid fa-square-check text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <section id="step-6" class="tab-content bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">Final Step: Exit Ticket</span>
+            <h2 class="text-2xl font-bold text-slate-900 mt-2 mb-2">Knowledge Verification &amp; Checkout</h2>
+            <p class="text-slate-600 text-sm mb-6">
+                Complete this final interactive dashboard to verify comprehension and register your performance score. 
+            </p>
+
+            <form id="exit-ticket-form" onsubmit="handleExitTicketSubmit(event)" class="space-y-6">
+                
+                <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <h3 class="font-semibold text-slate-800 mb-2">Part A: Comprehensive Synthesis Calculation</h3>
+                    <p class="text-xs text-slate-600 mb-4 leading-relaxed">
+                        An engineering prototype links a 10&nbsp;$\Omega$ sensor sub-assembly in a <strong>series path</strong> with an external 15&nbsp;$\Omega$ safety resistor. This integrated load network is connected straight across a 50V system supply line. 
+                        Calculate the system operating power generated.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Step 1: System Net Resistance ($R_{eq}$)</label>
+                            <select id="et-q1-r" required class="w-full p-2 border border-slate-300 rounded bg-white text-sm">
+                                <option value="" disabled selected>Choose calculated value...</option>
+                                <option value="wrong1">6 $\Omega$ (Parallel calculation error)</option>
+                                <option value="correct">25 $\Omega$ (Correct Series Summation)</option>
+                                <option value="wrong2">150 $\Omega$ (Multiplication error)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Step 2: Total Power Draw ($P$)</label>
+                            <select id="et-q1-p" required class="w-full p-2 border border-slate-300 rounded bg-white text-sm">
+                                <option value="" disabled selected>Choose calculated value...</option>
+                                <option value="wrong1">2 Watts</option>
+                                <option value="wrong2">500 Watts</option>
+                                <option value="correct">100 Watts (Correct $V^2/R_{eq}$)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label for="et-reflection-1" class="block font-medium text-slate-700 mb-1">Conceptual Distinctions</label>
+                        <p class="text-xs text-slate-500 mb-2">Explain in your own engineering terms how adding components modifies network structural flow paths differently in series configurations versus parallel arrangements.</p>
+                        <textarea id="et-reflection-1" rows="3" required class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="Write at least 2 sentences. Use structural contrasts, focusing on properties like alternate routing lanes or sequential single-lane restrictions."></textarea>
+                    </div>
+
+                    <div>
+                        <label for="et-reflection-2" class="block font-medium text-slate-700 mb-1">Muddiest Point Tracker</label>
+                        <p class="text-xs text-slate-500 mb-2">What specific mathematical trick, unit conversion, or concept covered today remains the most confusing or requires additional clarification?</p>
+                        <textarea id="et-reflection-2" rows="2" required class="w-full p-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 text-sm" placeholder="State the specific concept or operation clearly using bullet points or a short sentence. If everything makes perfect sense, note your strategy for double-checking calculations."></textarea>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+                    <button type="button" onclick="navigateToStep(5)" class="border border-slate-300 text-slate-600 font-medium px-4 py-2 rounded-lg hover:bg-slate-50 transition flex items-center gap-2">
+                        <i class="fa-solid fa-arrow-left text-xs"></i> Back
+                    </button>
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-8 py-3 rounded-xl shadow-md transition flex items-center gap-2">
+                        Submit Exit Ticket <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+            </form>
+
+            <div id="results-dashboard" class="mt-8 hidden p-6 bg-slate-900 text-white rounded-2xl border-2 border-emerald-500 shadow-xl">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fa-solid fa-square-poll-vertical text-2xl text-emerald-400"></i>
+                    <h3 class="text-xl font-bold">Submission Performance Dashboard</h3>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center mb-6">
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <span class="block text-xs text-slate-400 uppercase tracking-wider font-semibold">Synthesis Score</span>
+                        <span id="score-val" class="text-2xl font-black text-emerald-400">0 / 2</span>
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <span class="block text-xs text-slate-400 uppercase tracking-wider font-semibold">Self-Assessment</span>
+                        <span class="text-2xl font-black text-amber-400">Completed</span>
+                    </div>
+                    <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
+                        <span class="block text-xs text-slate-400 uppercase tracking-wider font-semibold">Status</span>
+                        <span class="text-2xl font-black text-indigo-400">Ready to Log</span>
+                    </div>
+                </div>
+                <div class="space-y-3 text-sm text-slate-300 border-t border-slate-800 pt-4">
+                    <p class="font-semibold text-white">Your Formative Review Notes:</p>
+                    <div id="dashboard-feedback-notes" class="bg-slate-950 p-3 rounded-lg border border-slate-800 font-mono text-xs text-amber-300">
+                        Checking input combinations...
+                    </div>
+                    <p class="text-xs text-slate-400 italic">
+                        Excellent engagement! Show this compiled terminal summary dashboard to your course lab instructor or click reset to study variants again.
+                    </p>
+                </div>
+                <button onclick="resetModule()" class="mt-6 w-full py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-bold tracking-wider uppercase border border-slate-700 transition">
+                    <i class="fa-solid fa-rotate-left mr-1"></i> Reset Lesson Module &amp; Try Again
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <script>
+        // Tab Navigation Mechanics
+        function navigateToStep(stepNumber) {
+            // Hide all tab panels
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Show requested tab panel
+            document.getElementById(`step-${stepNumber}`).classList.add('active');
+            
+            // Calculate progress bars layout values
+            const totalSteps = 6;
+            const progressPct = (stepNumber / totalSteps) * 100;
+            document.getElementById('main-progress').style.width = `${progressPct}%`;
+            document.getElementById('progress-text').innerText = `Step ${stepNumber} of ${totalSteps}`;
+            
+            // Window scroll stabilization
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Inline Checking Engine for Multiple Choice Elements
+        function checkAnswer(element, isCorrect, feedbackBoxId, feedbackText) {
+            const parent = element.parentElement;
+            const feedbackBox = document.getElementById(feedbackBoxId);
+            
+            // Clear prior selection states from adjacent option siblings
+            parent.querySelectorAll('button').forEach(btn => {
+                btn.classList.remove('border-emerald-500', 'bg-emerald-50', 'border-rose-500', 'bg-rose-50');
+                btn.querySelector('span').classList.remove('bg-emerald-500', 'text-white', 'bg-rose-500', 'text-white');
+                btn.querySelector('span').classList.add('bg-slate-100', 'text-slate-500');
+            });
+
+            // Target selected element styles
+            const indicatorSpan = element.querySelector('span');
+            indicatorSpan.classList.remove('bg-slate-100', 'text-slate-500');
+
+            if (isCorrect) {
+                element.classList.add('border-emerald-500', 'bg-emerald-50');
+                indicatorSpan.classList.add('bg-emerald-500', 'text-white');
+                feedbackBox.className = "mt-4 p-4 rounded-xl text-sm bg-emerald-50 text-emerald-900 border border-emerald-200 block";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-circle-check text-emerald-600 mr-2"></i>${feedbackText}`;
+            } else {
+                element.classList.add('border-rose-500', 'bg-rose-50');
+                indicatorSpan.classList.add('bg-rose-500', 'text-white');
+                feedbackBox.className = "mt-4 p-4 rounded-xl text-sm bg-rose-50 text-rose-900 border border-rose-200 block";
+                feedbackBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-600 mr-2"></i>${feedbackText}`;
+            }
+            
+            // Prompt MathJax to format runtime injections securely if present
+            if(window.MathJax) { window.MathJax.typeset(); }
+        }
+
+        // Exit Ticket Processing Framework
+        function handleExitTicketSubmit(event) {
+            event.preventDefault();
+            
+            const q1_r = document.getElementById('et-q1-r').value;
+            const q1_p = document.getElementById('et-q1-p').value;
+            
+            let finalScore = 0;
+            let reviewFeedback = "";
+
+            if (q1_r === "correct") {
+                finalScore++;
+                reviewFeedback += "[Step 1 Correct] Successfully computed Total Series Resistance: Req = 10 + 15 = 25 Ohms.\n";
+            } else {
+                reviewFeedback += "[Step 1 Error] Incorrect Series Resistance. Review Concept 3; elements in series accumulate via addition directly.\n";
+            }
+
+            if (q1_p === "correct") {
+                finalScore++;
+                reviewFeedback += "[Step 2 Correct] Successfully determined System Power via Joule's relationship (P = V^2 / Req = 2500 / 25 = 100 Watts).\n";
+            } else {
+                reviewFeedback += "[Step 2 Error] Power value mismatch. Use the total equivalent resistance calculated from step 1 combined with your voltage variable.\n";
+            }
+
+            // Display outputs into terminal elements
+            document.getElementById('score-val').innerText = `${finalScore} / 2`;
+            document.getElementById('dashboard-feedback-notes').innerText = reviewFeedback;
+            
+            // Reveal compiled dashboard panel view
+            document.getElementById('results-dashboard').classList.remove('hidden');
+            document.getElementById('results-dashboard').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Module Resetter
+        function resetModule() {
+            document.getElementById('exit-ticket-form').reset();
+            document.getElementById('results-dashboard').classList.add('hidden');
+            
+            // Clear intermediate checking elements dynamically
+            document.querySelectorAll('[id$="-feedback"]').forEach(box => {
+                box.classList.add('hidden');
+                box.innerHTML = "";
+            });
+            
+            // Navigate cleanly back to beginning frame 
+            navigateToStep(1);
+        }
+    </script>
+</body>
+</html>
