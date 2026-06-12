@@ -1,26 +1,3 @@
-
-Conversation with Gemini
-Create an index.html file for my website, Name = Savitha Pinnepalli, Position=Professor. Institution:Dallas College Use HTML.embedded CSS and Javascript. Create a link to the file names = accounting.html
-
-Your HTML website file is ready.
-HTML icon
-index
- HTML 
-Open
-
-The provided file includes a fully responsive design tailored for academia, complete with:
-
-Embedded CSS Styling: A clean corporate academic color scheme (Navy blue and Slate blue), card layouts, structured typography, and full mobile optimization.
-
-Embedded JavaScript: An interactive module logic button that checks the user's local system time to dynamically report office hour availability statuses without refreshing the page.
-
-Navigation: A clear button linking to your accounting.html file as requested.
-
-
-
-
-Gemini is AI and can make mistakes.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,6 +8,7 @@ Gemini is AI and can make mistakes.
         :root {
             --primary-color: #003366;
             --secondary-color: #4A90E2;
+            --accent-color: #2c3e50;
             --text-color: #333333;
             --light-bg: #f8f9fa;
             --white: #ffffff;
@@ -98,6 +76,10 @@ Gemini is AI and can make mistakes.
         .btn-container {
             margin-top: 25px;
             text-align: center;
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
 
         .btn {
@@ -112,9 +94,17 @@ Gemini is AI and can make mistakes.
             box-shadow: 0 2px 4px rgba(0,0,0,0.15);
         }
 
+        .btn.alt {
+            background-color: var(--accent-color);
+        }
+
         .btn:hover {
             background-color: #357ABD;
             transform: translateY(-2px);
+        }
+
+        .btn.alt:hover {
+            background-color: #1a252f;
         }
 
         .interactive-section {
@@ -156,10 +146,11 @@ Gemini is AI and can make mistakes.
         <section class="card">
             <h2>Welcome to My Academic Portal</h2>
             <p class="lead-text">Welcome! I am Savitha Pinnepalli, a Professor at Dallas College. This platform serves as a resource hub for students, colleagues, and academic researchers interested in our ongoing curriculum, courses, and educational initiatives.</p>
-            <p>Explore the specialized course links below to access lectures, syllabus timelines, grading criteria, and supplemental learning materials designed to foster academic excellence.</p>
+            <p>Explore the specialized course links and building utilities below to access instructional layouts, schedules, and active student deliverables.</p>
             
             <div class="btn-container">
                 <a href="accounting.html" class="btn">Access Accounting Course Resources &rarr;</a>
+                <a href="LessonBuilder3.html" class="btn alt">Open Lesson Builder Hub &rarr;</a>
             </div>
         </section>
 
@@ -206,5 +197,3 @@ Gemini is AI and can make mistakes.
     </script>
 </body>
 </html>
-index.html
-Displaying index.html.
