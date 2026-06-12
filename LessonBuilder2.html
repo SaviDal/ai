@@ -1,0 +1,190 @@
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Savitha Pinnepalli | Professor at Dallas College</title>
+    <style>
+        :root {
+            --primary-color: #003366;
+            --secondary-color: #4A90E2;
+            --text-color: #333333;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: #f4f6f9;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        h2 {
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+
+        .lead-text {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+        }
+
+        .btn-container {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            padding: 12px 24px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+        }
+
+        .btn:hover {
+            background-color: #357ABD;
+            transform: translateY(-2px);
+        }
+
+        .interactive-section {
+            background-color: var(--light-bg);
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+
+        #dynamic-message {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 10px;
+            min-height: 24px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 0.9rem;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Savitha Pinnepalli</h1>
+        <p>Professor | Dallas College</p>
+    </header>
+
+    <div class="container">
+        <section class="card">
+            <h2>Welcome to My Academic Portal</h2>
+            <p class="lead-text">Welcome! I am Savitha Pinnepalli, a Professor at Dallas College. This platform serves as a resource hub for students, colleagues, and academic researchers interested in our ongoing curriculum, courses, and educational initiatives.</p>
+            <p>Explore the specialized course links below to access lectures, syllabus timelines, grading criteria, and supplemental learning materials designed to foster academic excellence.</p>
+            
+            <div class="btn-container">
+                <a href="accounting.html" class="btn">Access Accounting Course Resources &rarr;</a>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Student Resources & Engagement</h2>
+            <p>Select your operational objective below to instantly fetch current updates or structural notifications using the interactive terminal tool.</p>
+            
+            <div class="interactive-section">
+                <p>Click below to verify today's academic scheduling window:</p>
+                <button id="action-btn" class="btn" style="margin-top: 10px; font-size: 0.9rem; padding: 8px 16px;">Check Schedule Office Hours</button>
+                <div id="dynamic-message"></div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Savitha Pinnepalli, Dallas College. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const actionBtn = document.getElementById('action-btn');
+            const messageDiv = document.getElementById('dynamic-message');
+
+            actionBtn.addEventListener('click', function() {
+                const now = new Date();
+                const hours = now.getHours();
+                let message = "";
+
+                if (hours >= 9 && hours <= 16) {
+                    message = "💡 General Availability Status: Currently holding active institutional sessions or dedicated student office hours.";
+                } else {
+                    message = "🌙 General Availability Status: Outside standard daytime office hours. Please submit an email inquiry for official scheduling.";
+                }
+
+                messageDiv.style.opacity = 0;
+                setTimeout(() => {
+                    messageDiv.textContent = message;
+                    messageDiv.style.transition = 'opacity 0.5s ease';
+                    messageDiv.style.opacity = 1;
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
+"""
+
+with open("index.html", "w", encoding="utf-8") as file:
+    file.write(html_content)
+print("File successfully created.")
