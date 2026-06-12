@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Lesson Prompt Generator</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --border-color: #cccccc;
+            --primary-color: #007bff;
+            --primary-hover: #0056b3;
+            --accent-bg: #f8f9fa;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #444444;
+            --primary-color: #3792ff;
+            --primary-hover: #1c75dd;
+            --accent-bg: #2a2a2a;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: var(--container-bg);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-toggle {
+            background-color: transparent;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--container-bg);
+            color: var(--text-color);
+            box-sizing: border-box;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 80px;
+        }
+
+        .checkbox-group {
+            background-color: var(--accent-bg);
+            padding: 15px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .checkbox-item input {
+            margin-top: 4px;
+            margin-right: 10px;
+        }
+
+        .output-section {
+            margin-top: 30px;
+            border-top: 2px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .preview-box {
+            background-color: var(--accent-bg);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            border-radius: 6px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 4px;
+            display: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Interactive Lesson Prompt Generator</h1>
+        <button class="btn btn-toggle" id="themeToggle" onclick="toggleTheme()">🌙 Dark Mode</button>
+    </div>
+
+    <div class="grid">
+        <div>
+            <div class="form-group">
+                <label for="aiPlatform">Target AI Platform</label>
+                <select id="aiPlatform" onchange="updatePrompt()">
+                    <option value="ChatGPT (GPT-4o)">ChatGPT (GPT-4o)</option>
+                    <option value="Claude 3.5 Sonnet">Claude 3.5 Sonnet</option>
+                    <option value="Google Gemini">Google Gemini</option>
+                    <option value="Generic LLM">General/Other LLM</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="lessonTitle">Lesson Title</label>
+                <input type="text" id="lessonTitle" placeholder="e.g., Introduction to Photosynthesis" oninput="updatePrompt()">
+            </div>
+
+            <div class="form-group">
+                <label for="lessonSubject">Lesson Subject / Grade Level</label>
+                <input type="text" id="lessonSubject" placeholder="e.g., 7th Grade Biology" oninput="updatePrompt()">
+            </div>
+
+            <div class="form-group">
+                <label for="learningObjectives">Learning Objectives</label>
+                <textarea id="learningObjectives" placeholder="What should students be able to do by the end?" oninput="updatePrompt()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="keyTerms">Key Terms</label>
+                <textarea id="keyTerms" placeholder="List important vocabulary words separated by commas..." oninput="updatePrompt()"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="keyConcepts">Key Concepts</label>
+                <textarea id="keyConcepts" placeholder="Core ideas or mechanisms to focus on..." oninput="updatePrompt()"></textarea>
+            </div>
+        </div>
+
+        <div>
+            <div class="form-group">
+                <label>Include Structural Elements:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includePreTest" checked onchange="updatePrompt()">
+                        <label for="includePreTest">Pre-test (Diagnostic baseline assessment)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeContent" checked onchange="updatePrompt()">
+                        <label for="includeContent">Core Content (Detailed, broken-down explanations)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeAnalogies" checked onchange="updatePrompt()">
+                        <label for="includeAnalogies">Analogies & Real-World Examples</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeSummary" checked onchange="updatePrompt()">
+                        <label for="includeSummary">Summary (Key takeaways wrapper)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="includeQuiz" checked onchange="updatePrompt()">
+                        <label for="includeQuiz">Review Quiz (Formative check with answer key)</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>ADA / Accessibility Compliance Checklist:</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="adaStructure" checked onchange="updatePrompt()">
+                        <label for="adaStructure">Use clear semantic heading structures (H1, H2, H3)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="adaAlt" checked onchange="updatePrompt()">
+                        <label for="adaAlt">Provide placeholder alt text descriptions for suggested visuals</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="adaLanguage" checked onchange="updatePrompt()">
+                        <label for="adaLanguage">Use plain, jargon-free language with explicit acronym definitions</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="adaContrast" checked onchange="updatePrompt()">
+                        <label for="adaContrast">Format complex concepts in high-contrast text lists or clear tables</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="output-section">
+        <div class="output-header">
+            <h3>Generated Prompt Preview</h3>
+            <button class="btn" onclick="copyPrompt()">📋 Copy Prompt</button>
+        </div>
+        <div class="preview-box" id="promptPreview">Your prompt will generate here as you fill out the form...</div>
+    </div>
+</div>
+
+<div class="toast" id="toast">Prompt copied to clipboard!</div>
+
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        const btn = document.getElementById('themeToggle');
+        if (body.getAttribute('data-theme') === 'dark') {
+            body.removeAttribute('data-theme');
+            btn.innerHTML = '🌙 Dark Mode';
+        } else {
+            body.setAttribute('data-theme', 'dark');
+            btn.innerHTML = '☀️ Light Mode';
+        }
+    }
+
+    function updatePrompt() {
+        // Inputs
+        const platform = document.getElementById('aiPlatform').value;
+        const title = document.getElementById('lessonTitle').value || '[Insert Lesson Title]';
+        const subject = document.getElementById('lessonSubject').value || '[Insert Subject/Grade]';
+        const objectives = document.getElementById('learningObjectives').value || '[Insert Objectives]';
+        const terms = document.getElementById('keyTerms').value || '[Insert Key Terms]';
+        const concepts = document.getElementById('keyConcepts').value || '[Insert Key Concepts]';
+
+        // Toggles
+        const preTest = document.getElementById('includePreTest').checked;
+        const content = document.getElementById('includeContent').checked;
+        const analogies = document.getElementById('includeAnalogies').checked;
+        const summary = document.getElementById('includeSummary').checked;
+        const quiz = document.getElementById('includeQuiz').checked;
+
+        // ADA Checkboxes
+        const adaStructure = document.getElementById('adaStructure').checked;
+        const adaAlt = document.getElementById('adaAlt').checked;
+        const adaLanguage = document.getElementById('adaLanguage').checked;
+        const adaContrast = document.getElementById('adaContrast').checked;
+
+        // Build the structure list dynamically
+        let structuralElements = [];
+        if (preTest) structuralElements.push("- A Pre-test: 3-5 diagnostic questions to assess prerequisite knowledge before starting.");
+        if (content) structuralElements.push("- Core Content: Deep explanations broken down into scannable chunks.");
+        if (analogies) structuralElements.push("- Analogies & Real-World Examples: Ground the concepts in concrete, everyday scenarios.");
+        if (summary) structuralElements.push("- Summary: A high-level recap of the essential core takeaways.");
+        if (quiz) structuralElements.push("- Review Quiz: 5 formative multiple-choice or short-answer questions accompanied by an explanation-based answer key.");
+
+        // Build ADA compliance requirements dynamically
+        let adaRequirements = [];
+        if (adaStructure) adaRequirements.push("- Structure content using crisp, logical heading hierarchies (Markdown ## and ###).");
+        if (adaAlt) adaRequirements.push("- Include explicit alt-text placeholders, e.g., '[Image Description: ...]', for any recommended graphics or charts.");
+        if (adaLanguage) adaRequirements.push("- Maintain accessible language parsing, ensuring all industry jargon is instantly defined.");
+        if (adaContrast) adaRequirements.push("- Utilize Markdown tables or bullet lists to optimize high-contrast structural scanning for screen readers.");
+
+        // Construct full prompt template
+        let promptText = `Act as an expert instructional designer optimized for execution on ${platform}. Your task is to generate a comprehensive, highly structured lesson blueprint based on the parameters outlined below.\n\n`;
+        
+        promptText += `### LESSON METADATA\n`;
+        promptText += `- **Title:** ${title}\n`;
+        promptText += `- **Subject/Target Audience:** ${subject}\n\n`;
+
+        promptText += `### FOUNDATIONAL PARAMETERS\n`;
+        promptText += `1. **Learning Objectives:**\n${objectives}\n\n`;
+        promptText += `2. **Key Vocabulary/Terms to Anchor:**\n${terms}\n\n`;
+        promptText += `3. **Core Concepts to Unpack:**\n${concepts}\n\n`;
+
+        if (structuralElements.length > 0) {
+            promptText += `### REQUIRED LESSON STRUCTURE\n`;
+            promptText += `Please generate the full text of the lesson containing explicitly labeled sections for:\n`;
+            promptText += structuralElements.join('\n') + `\n\n`;
+        }
+
+        if (adaRequirements.length > 0) {
+            promptText += `### ACCESSIBILITY & ADA COMPLIANCE DIRECTIVES\n`;
+            promptText += `To guarantee universal design access, you must format your response to strictly abide by these rules:\n`;
+            promptText += adaRequirements.join('\n') + `\n\n`;
+        }
+
+        promptText += `Please output the complete, ready-to-teach lesson text seamlessly mapping these directives. Do not cut off early.`;
+
+        document.getElementById('promptPreview').innerText = promptText;
+    }
+
+    function copyPrompt() {
+        const promptText = document.getElementById('promptPreview').innerText;
+        navigator.clipboard.writeText(promptText).then(() => {
+            const toast = document.getElementById('toast');
+            toast.style.display = 'block';
+            setTimeout(() => {
+                toast.style.display = 'none';
+            }, 2500);
+        }).catch(err => {
+            alert('Failed to copy text: ', err);
+        });
+    }
+
+    // Initialize
